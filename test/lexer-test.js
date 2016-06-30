@@ -3,6 +3,7 @@
 const assert = require('assert');
 
 const Lexer = require('../').Lexer;
+const Template = Lexer.Template;
 
 describe('ninja/Lexer', () => {
   describe('.token()', () => {
@@ -83,32 +84,42 @@ describe('ninja/Lexer', () => {
       return l.string();
     }
 
+    function path(str) {
+      const l = new Lexer(str);
+      return l.string(true);
+    }
+
     it('should parse regular string', () => {
-      assert.equal(string('value '), 'value');
+      assert.deepEqual(string('value '), new Template([ 'value ' ]));
+      assert.deepEqual(path('value '), new Template([ 'value' ]));
     });
 
     it('should parse string with "$ "', () => {
-      assert.equal(string('$ '), ' ');
+      assert.deepEqual(string('$ '), new Template([ ' ' ]));
     });
 
     it('should parse string with "$:"', () => {
-      assert.equal(string('$:'), ':');
+      assert.deepEqual(string('$:'), new Template([ ':' ]));
     });
 
     it('should parse string with "$$"', () => {
-      assert.equal(string('$$'), '$');
+      assert.deepEqual(string('$$'), new Template([ '$' ]));
     });
 
     it('should parse string with "$\\n"', () => {
-      assert.equal(string('a$\nb'), 'ab');
+      assert.deepEqual(string('a$\nb'), new Template([ 'ab' ]));
     });
 
     it('should parse string with "$\\r\\n"', () => {
-      assert.equal(string('a$\r\nb'), 'ab');
+      assert.deepEqual(string('a$\r\nb'), new Template([ 'ab' ]));
     });
 
     it('should parse declaration with "${abc}"', () => {
-      assert.equal(string('a${abc}b'), 'a${abc}b');
+      assert.deepEqual(string('a${abc}b'), new Template([ 'a', 'abc', 'b' ]));
+    });
+
+    it('should parse declaration with "$a"', () => {
+      assert.deepEqual(string('a$a.b'), new Template([ 'a', 'a', '.b' ]));
     });
   });
 });
