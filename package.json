@@ -1,0 +1,29 @@
+{
+  "name": "ninja.js",
+  "version": "1.0.0",
+  "description": "Minimalistic `ninja` build system implementation",
+  "main": "lib/ninja.js",
+  "scripts": {
+    "test": "mocha --reporter=spec test/*-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/indutny/ninja.js.git"
+  },
+  "keywords": [
+    "ninja",
+    "build",
+    "port"
+  ],
+  "author": "Fedor Indutny <fedor@indutny.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/indutny/ninja.js/issues"
+  },
+  "homepage": "https://github.com/indutny/ninja.js#readme",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  }
+}
