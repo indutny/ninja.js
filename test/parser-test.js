@@ -108,5 +108,44 @@ describe('ninja/Parser', () => {
         params: { z: '1' }
       } ]);
     });
+
+    it('should parse build with just implict deps', () => {
+      assert.deepEqual(p.parse('build a: cc b | c'), [ {
+        type: 'Build',
+        outputs: [ 'a' ],
+        inputs: [ 'b' ],
+        rule: 'cc',
+        deps: { implicit: [ 'c' ], orderOnly: [] },
+        params: {}
+      } ]);
+    });
+
+    it('should parse build with just orderOnly deps', () => {
+      assert.deepEqual(p.parse('build a: cc b || c'), [ {
+        type: 'Build',
+        outputs: [ 'a' ],
+        inputs: [ 'b' ],
+        rule: 'cc',
+        deps: { implicit: [], orderOnly: [ 'c' ] },
+        params: {}
+      } ]);
+    });
+
+    it('should parse build with both deps', () => {
+      assert.deepEqual(p.parse('build a: cc b | c || d'), [ {
+        type: 'Build',
+        outputs: [ 'a' ],
+        inputs: [ 'b' ],
+        rule: 'cc',
+        deps: { implicit: [ 'c' ], orderOnly: [ 'd' ] },
+        params: {}
+      } ]);
+    });
+
+    it('should not parse build with duplicate deps', () => {
+      assert.throws(() => {
+        p.parse('build a: cc b || c || d');
+      }, /Duplicate deps separator/);
+    });
   });
 });
