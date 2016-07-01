@@ -50,6 +50,25 @@ describe('ninja/Evaluator', () => {
     );
   });
 
+  it('should pass `in_newline to rule/build', () => {
+    assert.deepEqual(
+      run('rule r\n  command=clang $in_newline -o $out\n' +
+          'build f.out: r f.in f.also\n'),
+      [ {
+        type: 'Build',
+        rule: {
+          name: 'r',
+          command: 'clang f.in\nf.also -o f.out',
+          params: {}
+        },
+        deps: { implicit: [], orderOnly: [] },
+        inputs: [ 'f.in', 'f.also' ],
+        outputs: [ 'f.out' ],
+        params: {}
+      } ]
+    );
+  });
+
   it('should evaluate variables in included ninjas', () => {
     const load = (name) => {
       assert.equal(name, 'sub.ninja');
