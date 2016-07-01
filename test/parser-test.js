@@ -18,29 +18,29 @@ describe('ninja/Parser', () => {
   describe('var', () => {
     it('should not parse var after indent', () => {
       assert.throws(() => {
-        p.parse(' name =');
-      }, /Unexpected Indent at 1:1/);
+        p.parse(' name =\n');
+      }, /but found Indent at 1:1/);
     });
 
     it('should parse empty declaration', () => {
-      assert.deepEqual(p.parse('name   =  '), [
+      assert.deepEqual(p.parse('name   =  \n'), [
           { type: 'Variable', name: 'name', value: new T('') } ]);
     });
 
     it('should parse empty declaration with fancy name', () => {
-      assert.deepEqual(p.parse('name.-_   =  '), [
+      assert.deepEqual(p.parse('name.-_   =  \n'), [
           { type: 'Variable', name: 'name.-_', value: new T('') } ]);
     });
 
     it('should parse declaration with value', () => {
-      assert.deepEqual(p.parse('name = value '), [
+      assert.deepEqual(p.parse('name = value \n'), [
           { type: 'Variable', name: 'name', value: new T('value ') } ]);
     });
   });
 
   describe('build', () => {
     it('should parse one-liner build', () => {
-      assert.deepEqual(p.parse('build a : cc b '), [ {
+      assert.deepEqual(p.parse('build a : cc b \n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -51,7 +51,7 @@ describe('ninja/Parser', () => {
     });
 
     it('should parse build with vars', () => {
-      assert.deepEqual(p.parse('build a: cc b \n  x=1\n  y=2'), [ {
+      assert.deepEqual(p.parse('build a: cc b \n  x=1\n  y=2\n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -63,7 +63,7 @@ describe('ninja/Parser', () => {
 
     it('should parse multiple builds with vars', () => {
       assert.deepEqual(p.parse('build a: cc b \n  x=1\n  y=2\n' +
-                               'build c: cc d\n  z=1'), [ {
+                               'build c: cc d\n  z=1\n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -80,8 +80,8 @@ describe('ninja/Parser', () => {
       } ]);
     });
 
-    it('should parse build with just implict deps', () => {
-      assert.deepEqual(p.parse('build a: cc b | c'), [ {
+    it('should parse build with just implicit deps', () => {
+      assert.deepEqual(p.parse('build a: cc b | c\n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -92,7 +92,7 @@ describe('ninja/Parser', () => {
     });
 
     it('should parse build with just orderOnly deps', () => {
-      assert.deepEqual(p.parse('build a: cc b || c'), [ {
+      assert.deepEqual(p.parse('build a: cc b || c\n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -103,7 +103,7 @@ describe('ninja/Parser', () => {
     });
 
     it('should parse build with both deps', () => {
-      assert.deepEqual(p.parse('build a: cc b | c || d'), [ {
+      assert.deepEqual(p.parse('build a: cc b | c || d\n'), [ {
         type: 'Build',
         outputs: [ new T('a') ],
         inputs: [ new T('b') ],
@@ -122,7 +122,7 @@ describe('ninja/Parser', () => {
 
   describe('rule', () => {
     it('should parse minimal rule', () => {
-      assert.deepEqual(p.parse('rule a\n command=a $in $out'), [ {
+      assert.deepEqual(p.parse('rule a\n command=a $in $out\n'), [ {
         type: 'Rule',
         name: 'a',
         command: new T([ 'a ', 'in', ' ', 'out', '' ]),
@@ -137,16 +137,43 @@ describe('ninja/Parser', () => {
 
   describe('subninja', () => {
     it('should parse subninja', () => {
-      assert.deepEqual(p.parse('subninja /a/b/c'), [ {
+      assert.deepEqual(p.parse('subninja /a/b/c\n'), [ {
         type: 'Include',
         argument: new T('/a/b/c')
       } ]);
     });
 
     it('should parse include', () => {
-      assert.deepEqual(p.parse('include /a/b/c '), [ {
+      assert.deepEqual(p.parse('include /a/b/c \n'), [ {
         type: 'Include',
         argument: new T('/a/b/c')
+      } ]);
+    });
+  });
+
+  describe('pool', () => {
+    it('should parse pool', () => {
+      assert.deepEqual(p.parse('pool a\n depth=123\n'), [ {
+        type: 'Pool',
+        name: 'a',
+        depth: new T('123')
+      } ]);
+    });
+
+    it('should fail to parse pool without depth', () => {
+      assert.throws(() => p.parse('pool a\n'), /depth/);
+    });
+
+    it('should fail to parse pool with unknown vars', () => {
+      assert.throws(() => p.parse('pool a\n depth=123\n x=2\n'), /variables/);
+    });
+  });
+
+  describe('default', () => {
+    it('should parse default', () => {
+      assert.deepEqual(p.parse('default a b c \n'), [ {
+        type: 'Default',
+        targets: [ new T('a'), new T('b'), new T('c') ]
       } ]);
     });
   });

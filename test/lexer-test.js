@@ -56,9 +56,7 @@ describe('ninja/Lexer', () => {
     it('should advance position', () => {
       const l = new Lexer('abc def ghi');
       assert.deepEqual(l.token(), { type: 'Identifier', value: 'abc' });
-      assert.deepEqual(l.token(), { type: 'Indent', value: ' ' });
       assert.deepEqual(l.token(), { type: 'Identifier', value: 'def' });
-      assert.deepEqual(l.token(), { type: 'Indent', value: ' ' });
       assert.deepEqual(l.token(), { type: 'Identifier', value: 'ghi' });
       assert.deepEqual(l.token(), { type: 'EOF', value: null });
     });
