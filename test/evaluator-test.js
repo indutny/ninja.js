@@ -90,4 +90,11 @@ describe('ninja/Evaluator', () => {
       } ]
     );
   });
+
+  it('should evaluate `default`', () => {
+    assert.deepEqual(run('a=1\ndefault $a.o\n'), [ {
+      type: 'Default',
+      targets: [ '1.o' ]
+    } ]);
+  });
 });

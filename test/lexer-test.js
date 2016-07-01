@@ -18,16 +18,8 @@ describe('ninja/Lexer', () => {
 
     it('should ignore comments', () => {
       assert.deepEqual(token('#abc'), { type: 'EOF', value: null });
-    });
-
-    it('should parse keyword', () => {
-      assert.deepEqual(token('build'), { type: 'Keyword', value: 'build' });
-      assert.deepEqual(token('rule'), { type: 'Keyword', value: 'rule' });
-      assert.deepEqual(token('default'), { type: 'Keyword', value: 'default' });
-      assert.deepEqual(token('subninja'),
-                       { type: 'Keyword', value: 'subninja' });
-      assert.deepEqual(token('include'), { type: 'Keyword', value: 'include' });
-      assert.deepEqual(token('pool'), { type: 'Keyword', value: 'pool' });
+      assert.deepEqual(token('#abc\n#abc\n'), { type: 'EOF', value: null });
+      assert.deepEqual(token('#\n#abc\n'), { type: 'EOF', value: null });
     });
 
     it('should parse identifier', () => {
