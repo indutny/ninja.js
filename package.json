@@ -23,6 +23,7 @@
   "homepage": "https://github.com/indutny/ninja.js#readme",
   "dependencies": {
     "async": "^2.0.0-rc.6",
+    "mkdirp": "^0.5.1",
     "yargs-parser": "^2.4.0"
   },
   "devDependencies": {
