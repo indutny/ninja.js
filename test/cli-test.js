@@ -1,3 +1,4 @@
+/* global describe it */
 'use strict';
 
 const assert = require('assert');
@@ -20,7 +21,7 @@ describe('ninja/CLI', () => {
     it('should change prefixed cmd', () => {
       const options = {};
       const cache = new Map();
-      const cmd = cli.prepareWinEnv(`ninja -t msvc -e win.env -- abc`, options,
+      const cmd = cli.prepareWinEnv('ninja -t msvc -e win.env -- abc', options,
                                     fixtures, {}, cache);
       assert.equal(cmd, ' abc');
       assert.deepEqual(options, { env: { ABC: 123, DEF: 456 } });
@@ -30,7 +31,7 @@ describe('ninja/CLI', () => {
     it('should replace when called without -e', () => {
       const options = {};
       const cache = new Map();
-      const cmd = cli.prepareWinEnv(`ninja -t msvc -- abc`, options,
+      const cmd = cli.prepareWinEnv('ninja -t msvc -- abc', options,
                                     '.', {}, cache);
       assert.equal(cmd, ' abc');
       assert.deepEqual(options, {});

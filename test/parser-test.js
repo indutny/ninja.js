@@ -1,3 +1,4 @@
+/* global describe it beforeEach afterEach */
 'use strict';
 
 const assert = require('assert');
@@ -64,20 +65,20 @@ describe('ninja/Parser', () => {
     it('should parse multiple builds with vars', () => {
       assert.deepEqual(p.parse('build a: cc b \n  x=1\n  y=2\n' +
                                'build c: cc d\n  z=1\n'), [ {
-        type: 'Build',
-        outputs: [ new T('a') ],
-        inputs: [ new T('b') ],
-        rule: 'cc',
-        deps: { implicit: [], orderOnly: [] },
-        params: { x: new T('1'), y: new T('2') }
-      }, {
-        type: 'Build',
-        outputs: [ new T('c') ],
-        inputs: [ new T('d') ],
-        rule: 'cc',
-        deps: { implicit: [], orderOnly: [] },
-        params: { z: new T('1') }
-      } ]);
+                                 type: 'Build',
+                                 outputs: [ new T('a') ],
+                                 inputs: [ new T('b') ],
+                                 rule: 'cc',
+                                 deps: { implicit: [], orderOnly: [] },
+                                 params: { x: new T('1'), y: new T('2') }
+                               }, {
+                                 type: 'Build',
+                                 outputs: [ new T('c') ],
+                                 inputs: [ new T('d') ],
+                                 rule: 'cc',
+                                 deps: { implicit: [], orderOnly: [] },
+                                 params: { z: new T('1') }
+                               } ]);
     });
 
     it('should parse build with just implicit deps', () => {

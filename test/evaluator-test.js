@@ -1,3 +1,4 @@
+/* global describe it */
 'use strict';
 
 const assert = require('assert');
@@ -5,7 +6,6 @@ const assert = require('assert');
 const ninja = require('../');
 const Parser = ninja.Parser;
 const Evaluator = ninja.Evaluator;
-const T = ninja.Lexer.Template;
 
 describe('ninja/Evaluator', () => {
   function parse(string) {
