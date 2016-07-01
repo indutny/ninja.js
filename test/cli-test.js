@@ -20,11 +20,20 @@ describe('ninja/CLI', () => {
     it('should change prefixed cmd', () => {
       const options = {};
       const cache = new Map();
-      const cmd = cli.prepareWinEnv(`ninja -t msvc ${file} -- abc`, options,
+      const cmd = cli.prepareWinEnv(`ninja -t msvc -e ${file} -- abc`, options,
                                     {}, cache);
       assert.equal(cmd, ' abc');
       assert.deepEqual(options, { env: { ABC: 123, DEF: 456 } });
       assert.deepEqual(cache.get(file), {  ABC: 123, DEF: 456 });
+    });
+
+    it('should replace when called without -e', () => {
+      const options = {};
+      const cache = new Map();
+      const cmd = cli.prepareWinEnv(`ninja -t msvc -- abc`, options,
+                                    {}, cache);
+      assert.equal(cmd, ' abc');
+      assert.deepEqual(options, {});
     });
   });
 });

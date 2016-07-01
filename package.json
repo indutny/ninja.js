@@ -6,6 +6,9 @@
   "scripts": {
     "test": "mocha --reporter=spec test/*-test.js"
   },
+  "bin": {
+    "ninja.js": "./bin/ninja.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/indutny/ninja.js.git"
