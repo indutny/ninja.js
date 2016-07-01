@@ -1,6 +1,6 @@
 {
   "name": "ninja.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Minimalistic `ninja` build system implementation",
   "main": "lib/ninja.js",
   "scripts": {
