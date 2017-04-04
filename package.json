@@ -9,7 +9,7 @@
     "test": "mocha --reporter=spec test/*-test.js && npm run lint"
   },
   "bin": {
-    "ninja.js": "./bin/ninja.js"
+    "ninjajs": "./bin/ninja.js"
   },
   "repository": {
     "type": "git",
